@@ -8,14 +8,70 @@
 </head>
 <body>
     <h1>Rock, Paper, Scissors</h1>
-    <p>In order to play, click the button below and type either Rock, Paper or Scissors in the alert box.</p>
-    <p>The game will play for 5 rounds. Good luck!</p>
-    <button onclick="game()">Play the game!</button>
+    <p>In order to play, click one of the buttons below to choose either rock, paper or scissors.</p>
+    <p>The winner is the player who scores 5 first.</p>
+    <div class="buttons">
+        <button id="rock">Rock</button>
+        <button id="paper">Paper</button>
+        <button id="scissors">Scissors</button>
+    </div>
+
+    <h2 id="round"></h2>
+    <h3 id="game-result"></h3>
+    <p id="player-choice" ></p>
+    <p id="computer-choice"></p>
+    <p id="player-score"></p>
+    <p id="computer-score"></p>
+    
     <script>
+        let scores = {
+            player: 0,
+            computer: 0
+        }
+        let round = 0;
+        const buttons = document.querySelectorAll(".buttons");
+        const playerChoice = document.querySelector("#player-choice");
+        const computerChoice = document.querySelector("#computer-choice");
+        const playerScore = document.querySelector("#player-score");
+        const computerScore = document.querySelector("#computer-score");
+        const gameResult = document.querySelector("#game-result");
+        const showRound = document.querySelector("#round");
+
+        for (const button of buttons) {
+            button.addEventListener('click', (e)=>{
+                if (scores.player == 0 && scores.computer == 0) {
+                        gameResult.innerHTML = '';
+                        round = 0;
+                    }
+                    console.log(playRound(e.target.innerText, computerPlay() ))
+                    if (scores.player == 5) {
+                        scores.player = 0;
+                        scores.computer = 0;
+                        clearScoresAndChoices();
+                        gameResult.innerHTML = "Congratulations, you win!"
+                    } else if (scores.computer == 5){
+                        scores.player = 0;
+                        scores.computer = 0;
+                        clearScoresAndChoices();
+                        gameResult.innerHTML = "Unlucky, you lose."
+                    }else{
+                        playerChoice.innerHTML = '';
+                        playerChoice.innerHTML += `You chose: ${e.target.innerText}`;
+                        playerScore.innerHTML = `Your score: ${scores.player}`;
+                        computerScore.innerHTML = `Computers score: ${scores.computer}`;
+                    }
+                    round++;
+                    showRound.innerHTML = "Round " + round;
+            }, false)
+        }
+        
         const choices = ["Rock", "Paper", "Scissors"]
 
         function computerPlay() {
             let num = Math.floor(Math.random() * Math.floor(3));
+            computerChoice.innerHTML = '';
+            computerChoice.innerHTML += `Computer chose: ${choices[num]}`;
+            computerChoice.classList.remove("hidden");
             return choices[num];
         }
 
@@ -25,29 +81,35 @@
                     return "Its a tie, you both chose rock!"
                 }
                 else if (computerSelection == "Paper"){
+                    scores.computer += 1
                     return "You lose, paper beats rock!"
                 }
                 else if (computerSelection == "Scissors"){
+                    scores.player += 1
                     return "You win! rock beats scissors"
                 }
             }
             else if (playerSelection == "Paper") {
                 if (computerSelection == "Rock"){
+                    scores.player += 1
                     return "You win, paper beats rock!"
                 }
                 else if (computerSelection == "Paper"){
                     return "It's a tie, you both chose paper"
                 }
                 else if (computerSelection == "Scissors"){
+                    scores.computer += 1
                     return "You lose! Scissors beats paper"
                 }
             }
 
             else if (playerSelection == "Scissors"){
                 if (computerSelection == "Rock"){
+                    scores.computer += 1
                     return "You lose, rock beats scissors!"
                 }
                 else if (computerSelection == "Paper"){
+                    scores.player += 1
                     return "You win, scissors beats paper!"
                 }
                 else if (computerSelection == "Scissors"){
@@ -58,31 +120,38 @@
             }
         }
 
-        function game() {
-            let playerScore = 0;
-            let computerScore = 0;
-            let playerSelection = "";
-            for (let index = 0; index < 5; index++) {
-                let promptSelection = window.prompt("Rock, paper or scissors?");
-                promptSelection = promptSelection.toLowerCase()
-                promptSelection = promptSelection.charAt(0).toUpperCase() + promptSelection.slice(1);
-                if (promptSelection == "Rock" || promptSelection == "Paper" || promptSelection == "Scissors"){
-                playerSelection = promptSelection;
-                }
-                let computerSelection = computerPlay();
-                let result = playRound(playerSelection, computerSelection)
-                if(result.includes("You win")){
-                    playerScore += 1;
-                }
-                else if(result.includes("You lose")){
-                    computerScore += 1;
-                }
-                alert(`
-                ${result} 
-                Your score: ${playerScore}. Computers score: ${computerScore}`);
-            }
-            playerScore > computerScore ? alert("Well done, you win") : alert("Unlucky, you lose")
+        function clearScoresAndChoices() {
+            computerChoice.innerHTML = '';
+            playerScore.innerHTML = '';
+            playerChoice.innerHTML = '';
+            computerScore.innerHTML = '';
         }
+
+        // function game() {
+        //     let playerScore = 0;
+        //     let computerScore = 0;
+        //     let playerSelection = "";
+        //     for (let index = 0; index < 5; index++) {
+        //         let promptSelection = window.prompt("Rock, paper or scissors?");
+        //         promptSelection = promptSelection.toLowerCase()
+        //         promptSelection = promptSelection.charAt(0).toUpperCase() + promptSelection.slice(1);
+        //         if (promptSelection == "Rock" || promptSelection == "Paper" || promptSelection == "Scissors"){
+        //         playerSelection = promptSelection;
+        //         }
+        //         let computerSelection = computerPlay();
+        //         let result = playRound(playerSelection, computerSelection)
+        //         if(result.includes("You win")){
+        //             playerScore += 1;
+        //         }
+        //         else if(result.includes("You lose")){
+        //             computerScore += 1;
+        //         }
+        //         alert(`
+        //         ${result} 
+        //         Your score: ${playerScore}. Computers score: ${computerScore}`);
+        //     }
+        //     playerScore > computerScore ? alert("Well done, you win") : alert("Unlucky, you lose")
+        // }
     </script>
 </body>
 </html>
